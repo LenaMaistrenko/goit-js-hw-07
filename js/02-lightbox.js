@@ -1,8 +1,7 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const galleryContainer = document.querySelector(".gallery");
-console.log(galleryContainer);
+const galleryEl = document.querySelector(".gallery");
 
 function createMarkup(arr) {
   const markup = arr
@@ -12,26 +11,17 @@ function createMarkup(arr) {
 </a>`;
     })
     .join("");
-
   return markup;
 }
-galleryContainer.insertAdjacentHTML("beforeend", createMarkup(galleryItems));
-galleryContainer.addEventListener("click", galleryOnClick);
-function galleryOnClick(evt) {
-  if (evt.target.nodeName !== "IMG") {
-    return;
-  }
-  evt.preventDefault();
-  const imgUrl = evt.target.dataset.source;
-  const instance = basicLightbox.create(`
-    <img src= "${imgUrl}">`);
-  instance.show();
-  window.addEventListener("keydown", onEscPress);
-  function onEscPress(evt) {
-    console.log(evt.code);
-    if (evt.code === "Escape") {
-      instance.close();
-      window.removeEventListener("keydown", onEscPress);
-    }
-  }
-}
+
+const imagesMarkup = createMarkup(galleryItems);
+galleryEl.insertAdjacentHTML("beforeend", imagesMarkup);
+
+const gallery = new SimpleLightbox(".gallery a");
+gallery.on("show.simplelightbox", function () {
+  gallery.options.captionsData = "alt";
+  gallery.options.captionsDelay = 250;
+  console.log(gallery.options);
+});
+
+//console.log(galleryItems);
